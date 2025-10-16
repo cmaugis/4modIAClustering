@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4modIA-Clustering - TP 3 - CAH</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./LogoINSAToulouse.jpg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">4modIA-Clustering</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./TP1-Kmeans-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP1</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP2-DBSCAN-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP2</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP3-CAH-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP3</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP4-MelangesGMM-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP4</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP5-Velib-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP5</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#clustering-des-données-de-vin-par-cah" id="toc-clustering-des-données-de-vin-par-cah" class="nav-link active" data-scroll-target="#clustering-des-données-de-vin-par-cah"><span class="header-section-number">1</span> Clustering des données de vin par CAH</a></li>
+  <li><a href="#clustering-des-données-zoo-par-cah" id="toc-clustering-des-données-zoo-par-cah" class="nav-link" data-scroll-target="#clustering-des-données-zoo-par-cah"><span class="header-section-number">2</span> Clustering des données Zoo par CAH</a>
+  <ul class="collapse">
+  <li><a href="#lecture-des-données-et-fonctions-auxiliaires" id="toc-lecture-des-données-et-fonctions-auxiliaires" class="nav-link" data-scroll-target="#lecture-des-données-et-fonctions-auxiliaires"><span class="header-section-number">2.1</span> Lecture des données et fonctions auxiliaires</a></li>
+  <li><a href="#cah-directe-sur-variables-qualitatives" id="toc-cah-directe-sur-variables-qualitatives" class="nav-link" data-scroll-target="#cah-directe-sur-variables-qualitatives"><span class="header-section-number">2.2</span> CAH directe sur variables qualitatives</a></li>
+  <li><a href="#cah-sur-les-coordonnées-de-mca" id="toc-cah-sur-les-coordonnées-de-mca" class="nav-link" data-scroll-target="#cah-sur-les-coordonnées-de-mca"><span class="header-section-number">2.3</span> CAH sur les coordonnées de MCA</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TP 3 - CAH</h1>
+<p class="subtitle lead">Correction - 2025/2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>L’objectif de ce TP est d’illustrer les notions abordées pour classification hiérarchique. Les librairies R nécessaires pour ce TP :</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-1_8be7596aca35b95bdd230b9c011c55ac">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclust)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterSim)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="clustering-des-données-de-vin-par-cah" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Clustering des données de vin par CAH</h1>
+<p>On reprend dans ce TP les données <code>wine</code> disponibles sur la page moodle du cours. On charge ici les données.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-2_00d38a09d1ece948766d20e1c9bcb960">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>wine<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"wine.txt"</span>,<span class="at">header=</span>T)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>wine<span class="sc">$</span>Qualite <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(wine<span class="sc">$</span>Qualite)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>wine<span class="sc">$</span>Type <span class="ot">&lt;-</span> <span class="fu">factor</span>(wine<span class="sc">$</span>Type, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"blanc"</span>, <span class="st">"rouge"</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>wineinit<span class="ot">&lt;-</span>wine</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)]<span class="ot">&lt;-</span><span class="fu">scale</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">center=</span>T,<span class="at">scale=</span>T)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Qualite  Type      AcidVol    AcidCitr     SO2lbr      SO2tot     Densite
+1352  medium rouge  1.638714588 -1.92626362 -1.2083376 -1.15967786 -0.46497450
+5493  medium blanc -0.068544417 -1.35617574 -0.7004747 -0.85707581 -0.33499781
+5153  medium blanc -0.800226847 -0.59605856  0.5409681 -0.02047014  1.32391517
+5308  medium blanc -0.007570881  0.92417581  1.7824108  1.27893867  1.08790487
+3866  medium blanc  0.419243870  0.03737243 -0.5311870  0.99413674  0.03783006
+694   medium rouge  0.785085086  0.03737243 -0.4747578  0.19313131  1.27260858
+          Alcool
+1352  1.14546909
+5493 -1.12092616
+5153 -1.29526426
+5308 -1.29526426
+3866  0.09944051
+694  -0.94658806</code></pre>
+</div>
+</div>
+<p>On fait une ACP pour la visualisation des résultats dans la suite</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-3_36b4a333dbed490b0a49e6ef8a11cfb7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>resacp<span class="ot">&lt;-</span><span class="fu">PCA</span>(wine,<span class="at">quali.sup=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">scale.unit =</span> <span class="cn">TRUE</span>,<span class="at">graph=</span><span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(resacp,<span class="at">geom=</span><span class="fu">c</span>(<span class="st">"point"</span>),<span class="at">habillage=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Question</strong> : A l’aide de la fonction <code>hclust</code>, faites une classification hiérarchique des données de vins avec les mesures d’agrégation <code>single</code>, <code>complete</code> et <code>average</code> respectivement. Comparez visuellement les dendrogrammes associés. Commentez.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-4_0c7043c139e515d7fee383e5e1e6af6c">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hclustsingle<span class="ot">&lt;-</span><span class="fu">hclust</span>(...)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>hclustcomplete<span class="ot">&lt;-</span><span class="fu">hclust</span>(...)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>hclustaverage<span class="ot">&lt;-</span><span class="fu">hclust</span>(...)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Dendrogramme</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hclustsingle,<span class="at">hang=</span><span class="sc">-</span><span class="dv">1</span>,<span class="at">labels=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hclustsingle,<span class="at">show_labels=</span><span class="cn">FALSE</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ajustement des trois classifications hiérarchiques à l’aide de la fonction <code>hclust()</code> :</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-5_cb4c60b7ed9632bcb3f9776aa7f83cf3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d<span class="ot">&lt;-</span><span class="fu">dist</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">method=</span><span class="st">"euclidean"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hclustsingle<span class="ot">&lt;-</span><span class="fu">hclust</span>(d,<span class="at">method=</span><span class="st">"single"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>hclustcomplete<span class="ot">&lt;-</span><span class="fu">hclust</span>(d,<span class="at">method=</span><span class="st">"complete"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>hclustaverage<span class="ot">&lt;-</span><span class="fu">hclust</span>(d,<span class="at">method=</span><span class="st">"average"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Visualisation des trois dendrogrammes :</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-6_2e0324948dc80ccfeadfe7a317c58869">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hclustsingle,<span class="at">show_labels=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hclustcomplete,<span class="at">show_labels=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hclustaverage,<span class="at">show_labels=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Déduisez du dendrogramme avec la mesure d’agrégation <code>complete</code> une classification en 3 classes. Vous pouvez utiliser la fonction <code>cutree()</code>. Comparez-la avec les variables <em>Qualité</em> et <em>Type</em>. Commentez.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-7_c8984524e89bf9e964d607f6c75b11a8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-8_4f91d848e3b35ca218b17a2ee945d106">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ClassK3<span class="ot">&lt;-</span><span class="fu">cutree</span>(hclustcomplete,<span class="dv">3</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ClassK3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ClassK3
+  1   2   3 
+ 99 273 228 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison avec Qualité</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ClassK3,wine<span class="sc">$</span>Qualite)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+ClassK3 bad good medium
+      1   6   13     80
+      2   9   39    225
+      3   4   58    166</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(ClassK3,wine<span class="sc">$</span>Qualite)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.009529003</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison avec Type</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ClassK3,wine<span class="sc">$</span>Type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+ClassK3 blanc rouge
+      1    20    79
+      2   178    95
+      3   227     1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(ClassK3,wine<span class="sc">$</span>Type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2000887</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Tracez la distribution des variables quantitatives de <code>wine</code> en fonction de la classification en 3 classes de la question précédente. Commentez.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-9_c249f1574219d7950bb7a5fcd47dc833">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">Class=</span><span class="fu">as.factor</span>(ClassK3))</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">melt</span>(df,<span class="at">id=</span><span class="st">"Class"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>variable,<span class="at">y=</span>value))<span class="sc">+</span><span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-10_6d77b4925b25bea5672bfe7637ea96b8">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">Class=</span><span class="fu">as.factor</span>(ClassK3))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">melt</span>(df,<span class="at">id=</span><span class="st">"Class"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>variable,<span class="at">y=</span>value))<span class="sc">+</span><span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Dans cette question et pour les suivantes, on se focalise sur la mesure d’agrégation de Ward. Ajustez une classification hiérarchique avec la mesure de Ward. Que représentent les hauteurs du dendrogramme dans ce cas ?</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-11_91672638dfb731447a269e0034e4562f">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>hward<span class="ot">&lt;-</span><span class="fu">hclust</span>(...)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hward,<span class="at">show_labels=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-12_4e8cd884dae1c2f85bd67dee48c5d999">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>hward<span class="ot">&lt;-</span><span class="fu">hclust</span>(d,<span class="at">method=</span><span class="st">"ward.D2"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hward,<span class="at">show_labels=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Déterminez le nombre de classes à retenir avec l’indice de Calinski-Harabasz. Vous pouvez vous aider de la fonction <code>ìndex.G1()</code> de la librairie <code>clusterSim</code>. Tracez la classification obtenue sur le dendrogramme et sur le premier plan factoriel de l’ACP.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-13_b3af00ae26d6d105da3f3d45e23dd884">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A completer</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>CH<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Kmax<span class="ot">&lt;-</span><span class="dv">20</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Kmax){</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  CH<span class="ot">&lt;-</span><span class="fu">c</span>(CH,....)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>daux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">NbClust=</span><span class="dv">2</span><span class="sc">:</span>Kmax,<span class="at">CH=</span>CH)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(daux,<span class="fu">aes</span>(<span class="at">x=</span>NbClust,<span class="at">y=</span>CH))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">geom_point</span>()</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>ClustCH<span class="ot">&lt;-</span><span class="fu">cutree</span>(hward,....)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(....)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(....)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-14_09e9a743082fda58fa18a85253fea5e5">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>CH<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>Kmax<span class="ot">&lt;-</span><span class="dv">20</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Kmax){</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  CH<span class="ot">&lt;-</span><span class="fu">c</span>(CH,<span class="fu">index.G1</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="fu">cutree</span>(hward,k)))</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>daux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">NbClust=</span><span class="dv">2</span><span class="sc">:</span>Kmax,<span class="at">CH=</span>CH)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(daux,<span class="fu">aes</span>(<span class="at">x=</span>NbClust,<span class="at">y=</span>CH))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-15_392c998e4850bb838d86aed064f780a1">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ClustCH<span class="ot">&lt;-</span><span class="fu">cutree</span>(hward,<span class="fu">which.max</span>(CH)<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hward,<span class="at">show_labels=</span><span class="cn">FALSE</span>,<span class="at">k=</span><span class="fu">which.max</span>(CH)<span class="sc">+</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-16_77462c7eca0b9281ba7e820ffa9b4b6a">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(resacp,<span class="at">geom =</span> <span class="fu">c</span>(<span class="st">"point"</span>),<span class="at">habillage=</span><span class="fu">as.factor</span>(ClustCH))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-17_a435ac47c5126f7137579a0040bf615c">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ClustCH,wine<span class="sc">$</span>Qualite)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+ClustCH bad good medium
+      1   5    7    122
+      2   5   36    193
+      3   6   55     91
+      4   3   12     65</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ClustCH,wine<span class="sc">$</span>Type)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       
+ClustCH blanc rouge
+      1    20   114
+      2   233     1
+      3   138    14
+      4    34    46</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Déterminez le nombre de classes à retenir avec le critère Silhouette. Vous pouvez vous aider de la fonction <code>ìndex.S()</code> de la librairie <code>clusterSim</code>. Comparez avec la classification de la question précédente.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-18_42f34e8a459d9233236cf19de1f81634">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-19_89f2e5374ed20b14d50a2f9cd4014e01">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Silhou<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>Kmax<span class="ot">&lt;-</span><span class="dv">20</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>Kmax){</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  Silhou<span class="ot">&lt;-</span><span class="fu">c</span>(Silhou,<span class="fu">index.S</span>(d,<span class="fu">cutree</span>(hward,k)))</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>daux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">NbClust=</span><span class="dv">2</span><span class="sc">:</span>Kmax,<span class="at">Silhouette=</span>Silhou)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(daux,<span class="fu">aes</span>(<span class="at">x=</span>NbClust,<span class="at">y=</span>Silhouette))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Comparez la classification obtenue avec la méthode des Kmeans dans le TP 1 et celle obtenue à la question précédente.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-20_59360e362414fab67b3c10051e3219f3">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-21_cdec062cf9f32cbc2f5d54192fa3350b">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>reskmeans<span class="ot">&lt;-</span><span class="fu">kmeans</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="dv">4</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(reskmeans<span class="sc">$</span>cluster,<span class="fu">cutree</span>(hward,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+      1   2   3   4
+  1  18   9  10  63
+  2   2  74 139   3
+  3 110   0   3   1
+  4   4 151   0  13</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(reskmeans<span class="sc">$</span>cluster,<span class="fu">cutree</span>(hward,<span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4995215</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>clust1F<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">"ClKm-"</span>,reskmeans<span class="sc">$</span>cluster,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>clust2F<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">"ClCAH-"</span>,<span class="fu">cutree</span>(hward,<span class="dv">4</span>),<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>mycolor <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="dv">8</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">option =</span> <span class="st">"H"</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>mycolor <span class="ot">&lt;-</span> mycolor[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)]</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="fu">chordDiagram</span>(<span class="fu">table</span>(clust1F,clust2F),<span class="at">grid.col=</span>mycolor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="clustering-des-données-zoo-par-cah" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Clustering des données Zoo par CAH</h1>
+<section id="lecture-des-données-et-fonctions-auxiliaires" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="lecture-des-données-et-fonctions-auxiliaires"><span class="header-section-number">2.1</span> Lecture des données et fonctions auxiliaires</h2>
+<p>On reprend dans cette partie le jeu de données zoo ainsi que les fonctions auxiliaires comme dans le TP1. On refait une analyse en composantes multiples pour la suite.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-22_e002dc5039d4eca2694ba4a5a69b0099">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>zoo<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"zoo-dataTP.txt"</span>,<span class="at">header=</span>T,<span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(zoo))</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  zoo[,j]<span class="ot">&lt;-</span><span class="fu">as.factor</span>(zoo[,j])</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> hair   feathers eggs   milk   airbone aquatic predator toothed backbone
+ 0:58   0:81     0:42   0:60   0:77    0:65    0:45     0:40    0:18    
+ 1:43   1:20     1:59   1:41   1:24    1:36    1:56     1:61    1:83    
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+ breathes venomous fins   legs   tail   domestic catsize
+ 0:21     0:93     0:84   0:23   0:26   0:88     0:57   
+ 1:80     1: 8     1:17   2:27   1:75   1:13     1:44   
+                          4:38                          
+                          5: 1                          
+                          6:10                          
+                          8: 2                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"FactoMineR"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"factoextra"</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>res.mca<span class="ot">&lt;-</span> <span class="fu">MCA</span>(zoo,<span class="at">ncp =</span> <span class="dv">5</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_screeplot</span>(res.mca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_var</span>(res.mca, <span class="at">col.var =</span> <span class="st">"darkblue"</span>,<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-22-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_ind</span>(res.mca,<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-22-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Pour la suite du TP, on pourra utiliser les fonctions auxiliaires suivantes. La fonction <code>barplotClus()</code> permet de tracer la répartition des modalités de variables qualitatives pour chaque classe d’un clustering donné.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-23_bbc4fe57320c08c234249093b7c1fd75">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># J indice des variables</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Data = jeu de données</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># clust = clustering étudié</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># output : liste des graphes par variable dans J donnant la répartition des modalités de J par classe de clust</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>barplotClus <span class="ot">&lt;-</span> <span class="cf">function</span>(clust, Data, J) {</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    aux.long.p <span class="ot">&lt;-</span> <span class="fu">heatm</span>(clust, Data, J)<span class="sc">$</span>freq</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    p<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(J)) {</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>        p[[j]] <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aux.long.p[<span class="fu">which</span>(aux.long.p<span class="sc">$</span>variable <span class="sc">==</span> <span class="fu">colnames</span>(Data)[J[j]]), ],</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> clust, <span class="at">y =</span> perc, <span class="at">fill =</span> value)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>)<span class="sc">+</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">fill =</span> <span class="fu">colnames</span>(Data)[J[j]])</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>heatm <span class="ot">&lt;-</span> <span class="cf">function</span>(clust, Data, J) {</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(dplyr)</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>    Dataaux <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id.s =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Data)), Data)</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>    aux <span class="ot">&lt;-</span> <span class="fu">cbind</span>(Dataaux, clust)</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>    aux.long <span class="ot">&lt;-</span> <span class="fu">melt</span>(<span class="fu">data.frame</span>(<span class="fu">lapply</span>(aux, as.character)), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">id =</span> <span class="fu">c</span>(<span class="st">"id.s"</span>, <span class="st">"clust"</span>), <span class="at">factorsAsStrings =</span> T)</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Effectifs</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>    aux.long.q <span class="ot">&lt;-</span> aux.long <span class="sc">%&gt;%</span></span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(clust, variable, value) <span class="sc">%&gt;%</span></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">count =</span> <span class="fu">n_distinct</span>(id.s)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">distinct</span>(clust, variable, value, count)</span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avec fréquences</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>    aux.long.p <span class="ot">&lt;-</span> aux.long.q <span class="sc">%&gt;%</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(clust, variable) <span class="sc">%&gt;%</span></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">perc =</span> count<span class="sc">/</span><span class="fu">sum</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">arrange</span>(clust)</span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a>    Lev <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Data)) Lev <span class="ot">&lt;-</span> <span class="fu">c</span>(Lev, <span class="fu">levels</span>(Data[, j]))</span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>    Jaux <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(J)) {</span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a>        Jaux <span class="ot">&lt;-</span> <span class="fu">c</span>(Jaux, <span class="fu">which</span>(aux.long.p<span class="sc">$</span>variable <span class="sc">==</span> <span class="fu">colnames</span>(Data)[J[j]]))</span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>    gaux <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aux.long.p[Jaux, ], <span class="fu">aes</span>(<span class="at">x =</span> clust, <span class="at">y =</span> value)) <span class="sc">+</span> <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> perc)) <span class="sc">+</span></span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"white"</span>, <span class="at">mid =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">gaux =</span> gaux, <span class="at">eff =</span> aux.long.q, <span class="at">freq =</span> aux.long.p))</span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="cah-directe-sur-variables-qualitatives" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="cah-directe-sur-variables-qualitatives"><span class="header-section-number">2.2</span> CAH directe sur variables qualitatives</h2>
+<p><strong>Question :</strong> Quelle classification par CAH pouvez-vous mettre en place pour traiter des données qualitatives ? Mettez en application votre proposition avec R et étudiez la classification retenue. Vous pourrez vous aider des fonctions <code>daisy()</code> de la librairie <code>cluster</code>, de la fonction <code>hclust()</code>, …</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-24_172d40708a2c7663f2d469aa2dfb78a1">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-25_e44b34059283de6f4d37c8845e6553ff">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>gower.dist <span class="ot">&lt;-</span><span class="fu">daisy</span>(zoo,<span class="at">metric=</span><span class="fu">c</span>(<span class="st">"gower"</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>aggl <span class="ot">&lt;-</span> <span class="fu">hclust</span>(gower.dist, <span class="at">method =</span> <span class="st">"complete"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">K=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>,<span class="at">Height=</span><span class="fu">sort</span>(aggl<span class="sc">$</span>height,<span class="at">decreasing=</span>T)[<span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>]),<span class="fu">aes</span>(<span class="at">x=</span>K,<span class="at">y=</span>Height))<span class="sc">+</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(aggl,<span class="at">show_labels=</span><span class="cn">TRUE</span>,<span class="at">k=</span><span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-25-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-26_fdd1ee2fe9ebddb126ae488ef0e722e3">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>clustaggl<span class="ot">&lt;-</span><span class="fu">cutree</span>(aggl,<span class="dv">9</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_ind</span>(res.mca,<span class="at">geom.ind=</span><span class="fu">c</span>(<span class="st">"point"</span>,<span class="st">"text"</span>),<span class="at">habillage=</span><span class="fu">as.factor</span>(clustaggl),<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(clustaggl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>clustaggl
+ 1  2  3  4  5  6  7  8  9 
+36 13 15  7  5  6 10  5  4 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>clustaggl,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-26-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>clustaggl,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">8</span>))</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-26-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>clustaggl,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">9</span><span class="sc">:</span><span class="dv">12</span>))</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-26-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>clustaggl,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">13</span><span class="sc">:</span><span class="dv">16</span>))</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-26-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-27_c2a44281f5d614684ba94f0ad0c8a5df">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_var</span>(<span class="fu">MCA</span>(<span class="fu">data.frame</span>(<span class="at">cl=</span><span class="fu">as.factor</span>(clustaggl),zoo),<span class="at">quali.sup=</span><span class="dv">1</span>,<span class="at">ncp =</span> <span class="dv">5</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>),<span class="at">col.var =</span> <span class="st">"darkblue"</span>,<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="cah-sur-les-coordonnées-de-mca" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="cah-sur-les-coordonnées-de-mca"><span class="header-section-number">2.3</span> CAH sur les coordonnées de MCA</h2>
+<p><strong>Question :</strong> Mettez en place une classification des animaux à partir des coordonnées de l’analyse en composantes multiples. Comparez avec la classification obtenue dans la section précédente.</p>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-28_73798ea63bb04b34f64d4c2c1bbf05c5">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-29_ead91c9e004717f5ed1d3946007b7388">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>d<span class="ot">&lt;-</span><span class="fu">dist</span>(res.mca<span class="sc">$</span>ind<span class="sc">$</span>coord,<span class="at">method=</span><span class="st">"euclidean"</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>hward<span class="ot">&lt;-</span><span class="fu">hclust</span>(d,<span class="at">method=</span><span class="st">"ward.D2"</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hward,<span class="at">show_labels=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>daux1<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">NbClust=</span><span class="dv">1</span><span class="sc">:</span>Kmax,<span class="at">Intra=</span><span class="fu">rev</span>(hward<span class="sc">$</span>height[<span class="fu">tail</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(zoo),Kmax)<span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(daux1,<span class="fu">aes</span>(<span class="at">x=</span>NbClust,<span class="at">y=</span>Intra))<span class="sc">+</span><span class="fu">geom_line</span>()<span class="sc">+</span><span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-29-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>ClustIntra<span class="ot">&lt;-</span><span class="fu">cutree</span>(hward,<span class="dv">4</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_dend</span>(hward,<span class="at">show_labels=</span><span class="cn">TRUE</span>,<span class="at">k=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-29-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-30_cf89f6c22c5bd4c15252a496c067a4ad">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_ind</span>(res.mca,<span class="at">habillage=</span><span class="fu">as.factor</span>(ClustIntra),<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>ClustIntra,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>ClustIntra,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">8</span>))</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-30-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>ClustIntra,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">9</span><span class="sc">:</span><span class="dv">12</span>))</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-30-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(<span class="at">clust=</span>ClustIntra,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">13</span><span class="sc">:</span><span class="dv">16</span>))</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-30-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_var</span>(<span class="fu">MCA</span>(<span class="fu">data.frame</span>(<span class="at">cl=</span><span class="fu">as.factor</span>(ClustIntra),zoo),<span class="at">quali.sup=</span><span class="dv">1</span>,<span class="at">ncp =</span> <span class="dv">5</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>),<span class="at">col.var =</span> <span class="st">"darkblue"</span>,<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-30-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP3-CAH-Correction_cache/html/unnamed-chunk-31_db06d06638d71f0fa55141de93701ec1">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ClustIntra,clustaggl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          clustaggl
+ClustIntra  1  2  3  4  5  6  7  8  9
+         1 36  0  0  0  0  0  0  0  0
+         2  0 13  0  1  5  1  0  5  3
+         3  0  0 15  0  0  5  0  0  0
+         4  0  0  0  6  0  0 10  0  1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(ClustIntra,clustaggl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7499927</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>clust1F<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">"Cl-Direct"</span>,clustaggl,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>clust2F<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">"Cl-MCA"</span>,ClustIntra,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chordDiagram</span>(<span class="fu">table</span>(clust2F,clust1F))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP3-CAH-Correction_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4modIA-Clustering - TP 4 - Classification par modèles de mélanges</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./LogoINSAToulouse.jpg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">4modIA-Clustering</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./TP1-Kmeans-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP1</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP2-DBSCAN-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP2</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP3-CAH-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP3</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP4-MelangesGMM-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP4</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./TP5-Velib-SujetEtudiant.html" rel="" target="">
+ <span class="menu-text">TP5</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Contents</h2>
+   
+  <ul class="collapse">
+  <li><a href="#mélanges-gaussiens" id="toc-mélanges-gaussiens" class="nav-link active" data-scroll-target="#mélanges-gaussiens"><span class="header-section-number">1</span> Mélanges gaussiens</a>
+  <ul class="collapse">
+  <li><a href="#application-sur-données-simulées-uni-dimensionnelles" id="toc-application-sur-données-simulées-uni-dimensionnelles" class="nav-link" data-scroll-target="#application-sur-données-simulées-uni-dimensionnelles"><span class="header-section-number">1.1</span> Application sur données simulées uni-dimensionnelles</a></li>
+  <li><a href="#application-sur-des-données-simulées-dans-mathbbr2" id="toc-application-sur-des-données-simulées-dans-mathbbr2" class="nav-link" data-scroll-target="#application-sur-des-données-simulées-dans-mathbbr2"><span class="header-section-number">1.2</span> Application sur des données simulées dans <span class="math inline">\(\mathbb{R}^2\)</span></a></li>
+  <li><a href="#etude-des-données-de-vins" id="toc-etude-des-données-de-vins" class="nav-link" data-scroll-target="#etude-des-données-de-vins"><span class="header-section-number">1.3</span> Etude des données de vins</a></li>
+  </ul></li>
+  <li><a href="#classification-par-mélanges-pour-données-catégorielles" id="toc-classification-par-mélanges-pour-données-catégorielles" class="nav-link" data-scroll-target="#classification-par-mélanges-pour-données-catégorielles"><span class="header-section-number">2</span> Classification par mélanges pour données catégorielles</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TP 4 - Classification par modèles de mélanges</h1>
+<p class="subtitle lead">Correction - 2025/2026</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>L’objectif de ce TP est d’illustrer les notions abordées autour des modèles de mélanges.</p>
+<p>Les librairies R nécessaires pour ce TP :</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-1_142b428a42f738918e288267c987ee01">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pour faire le TP</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclust)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmixmod)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(FactoMineR)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="mélanges-gaussiens" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Mélanges gaussiens</h1>
+<section id="application-sur-données-simulées-uni-dimensionnelles" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="application-sur-données-simulées-uni-dimensionnelles"><span class="header-section-number">1.1</span> Application sur données simulées uni-dimensionnelles</h2>
+<p><strong>Question :</strong> A l’aide du code suivant, simulez un jeu de données selon un mélange gaussien en <span class="math inline">\(3\)</span> composantes unidimensionnel. Faites varier les différents paramètres (proportions, moyennes et variances).</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-2_bea17f8bdd05f2e84687a21acf0c6e00">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>a<span class="ot">&lt;-</span> ...</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span> ...</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mu<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="sc">-</span>a,<span class="dv">0</span>,a) <span class="co"># les moyennes \mu_k</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>sigma<span class="ot">&lt;-</span><span class="fu">c</span>(b,<span class="fl">0.5</span>,b) <span class="co"># les \sigma_k</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>prop<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.5</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>n<span class="ot">&lt;-</span> ...</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>Z<span class="ot">&lt;-</span><span class="fu">rmultinom</span>(....)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>X<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">X=</span><span class="fu">c</span>(<span class="fu">rnorm</span>(...),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rnorm</span>(...),</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rnorm</span>(...)))</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>labeltrue<span class="ot">&lt;-</span>    <span class="co"># vecteur des vrais labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-3_d5b9d17764c18806710868fca626fad3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>aux<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="sc">-</span>(a<span class="sc">+</span><span class="dv">4</span>),a<span class="sc">+</span><span class="dv">4</span>,<span class="fl">0.01</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">x=</span>aux,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">y1=</span>(prop[<span class="dv">1</span>]<span class="sc">*</span><span class="fu">dnorm</span>(aux,mu[<span class="dv">1</span>],sigma[<span class="dv">1</span>])), </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">y2=</span>(prop[<span class="dv">2</span>]<span class="sc">*</span><span class="fu">dnorm</span>(aux,mu[<span class="dv">2</span>],sigma[<span class="dv">2</span>])),     </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">y3=</span>(prop[<span class="dv">3</span>]<span class="sc">*</span><span class="fu">dnorm</span>(aux,mu[<span class="dv">3</span>],sigma[<span class="dv">3</span>])))</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>gvrai<span class="ot">&lt;-</span><span class="fu">ggplot</span>(X,<span class="fu">aes</span>(<span class="at">x=</span>X))<span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),<span class="at">bins=</span><span class="dv">100</span>)<span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y1),<span class="at">data=</span>Y,<span class="at">col=</span><span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y2),<span class="at">data=</span>Y,<span class="at">col=</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y3),<span class="at">data=</span>Y,<span class="at">col=</span><span class="st">"green"</span>)<span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>gvrai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-4_ee115743d2c2516cf960dc55d327629f">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>a<span class="ot">&lt;-</span><span class="dv">4</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>b<span class="ot">&lt;-</span><span class="dv">1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>mu<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="sc">-</span>a,<span class="dv">0</span>,a) <span class="co"># les moyennes \mu_k</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>sigma<span class="ot">&lt;-</span><span class="fu">c</span>(b,<span class="fl">0.5</span>,b) <span class="co"># les \sigma_k</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>prop<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.5</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>n<span class="ot">&lt;-</span><span class="dv">1000</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>Z<span class="ot">&lt;-</span><span class="fu">rmultinom</span>(<span class="at">n=</span>n,<span class="at">size=</span><span class="dv">1</span>,<span class="at">prob=</span>prop)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>X<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">X=</span><span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="at">n=</span><span class="fu">sum</span>(Z[<span class="dv">1</span>,]<span class="sc">==</span><span class="dv">1</span>),<span class="at">mean=</span>mu[<span class="dv">1</span>],<span class="at">sd=</span>sigma[<span class="dv">1</span>]),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rnorm</span>(<span class="at">n=</span><span class="fu">sum</span>(Z[<span class="dv">2</span>,]<span class="sc">==</span><span class="dv">1</span>),<span class="at">mean=</span>mu[<span class="dv">2</span>],<span class="at">sd=</span>sigma[<span class="dv">2</span>]),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rnorm</span>(<span class="at">n=</span><span class="fu">sum</span>(Z[<span class="dv">3</span>,]<span class="sc">==</span><span class="dv">1</span>),<span class="at">mean=</span>mu[<span class="dv">3</span>],<span class="at">sd=</span>sigma[<span class="dv">3</span>])))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>labeltrue<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">sum</span>(Z[<span class="dv">1</span>,]<span class="sc">==</span><span class="dv">1</span>)), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="fu">sum</span>(Z[<span class="dv">2</span>,]<span class="sc">==</span><span class="dv">1</span>)), <span class="fu">rep</span>(<span class="dv">3</span>,<span class="fu">sum</span>(Z[<span class="dv">3</span>,]<span class="sc">==</span><span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-5_a107dc1bcf6a0ca8e115142839eaa11f">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aux<span class="ot">&lt;-</span><span class="fu">seq</span>(<span class="sc">-</span>(a<span class="sc">+</span><span class="dv">4</span>),a<span class="sc">+</span><span class="dv">4</span>,<span class="fl">0.01</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Y<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">x=</span>aux,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">y1=</span>(prop[<span class="dv">1</span>]<span class="sc">*</span><span class="fu">dnorm</span>(aux,mu[<span class="dv">1</span>],sigma[<span class="dv">1</span>])), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">y2=</span>(prop[<span class="dv">2</span>]<span class="sc">*</span><span class="fu">dnorm</span>(aux,mu[<span class="dv">2</span>],sigma[<span class="dv">2</span>])),     </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">y3=</span>(prop[<span class="dv">3</span>]<span class="sc">*</span><span class="fu">dnorm</span>(aux,mu[<span class="dv">3</span>],sigma[<span class="dv">3</span>])))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>gvrai<span class="ot">&lt;-</span><span class="fu">ggplot</span>(X,<span class="fu">aes</span>(<span class="at">x=</span>X))<span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),<span class="at">bins=</span><span class="dv">100</span>)<span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y1),<span class="at">data=</span>Y,<span class="at">col=</span><span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y2),<span class="at">data=</span>Y,<span class="at">col=</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y3),<span class="at">data=</span>Y,<span class="at">col=</span><span class="st">"green"</span>)<span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>gvrai</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Estimez les paramètres d’un mélange à <span class="math inline">\(K=3\)</span> classes à l’aide de la fonction <code>Mclust()</code> de la librairie <code>mclust</code>. Comparez la classification obtenue avec les vrais labels.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-6_ed1d99696f27712a517b1ea5505db517">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A completer</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>res<span class="ot">&lt;-</span><span class="fu">Mclust</span>(...)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(...,...)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(...,...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-7_eb09d7d3552802d7c5277bc32b9f2563">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>res<span class="ot">&lt;-</span><span class="fu">Mclust</span>(X<span class="sc">$</span>X,<span class="at">G=</span><span class="dv">3</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(res<span class="sc">$</span>classification,labeltrue)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   labeltrue
+      1   2   3
+  1 190   2   0
+  2   0 306   1
+  3   0   0 501</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(res<span class="sc">$</span>classification,labeltrue)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9923714</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Représentez la densité de mélange estimée sur l’histogramme de l’échantillon simulé. Vous pouvez vous aider de la fonction <code>dnorm()</code> appliquée avec les différentes estimations de paramètres par composante.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-8_3ecb02cd948a753d8b31271a272aab53">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A completer</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dans y_k &lt;- \pi_k \times \phi(x; \mu_k,\sigma_k^2)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>MelEstim<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">x=</span>aux,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y1=</span>....., </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y2=</span>.....,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y3=</span>......)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>MelEstim<span class="ot">&lt;-</span><span class="fu">data.frame</span>(MelEstim,<span class="at">Somme=</span><span class="fu">apply</span>(MelEstim[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>],<span class="dv">1</span>,sum))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>gMelEst<span class="ot">&lt;-</span><span class="fu">ggplot</span>(X,<span class="fu">aes</span>(<span class="at">x=</span>X))<span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),<span class="at">bins=</span><span class="dv">100</span>)<span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y1),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y2),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"green4"</span>)<span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y3),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>Somme),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"yellow"</span>,<span class="at">linetype =</span> <span class="st">"dashed"</span>,<span class="at">linewidth=</span><span class="fl">1.5</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>gMelEst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-9_e3aa349d59d4a0d614425c7ec901ef4d">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>MelEstim<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">x=</span>aux,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y1=</span>res<span class="sc">$</span>parameters<span class="sc">$</span>pro[<span class="dv">1</span>] <span class="sc">*</span> <span class="fu">dnorm</span>(aux,res<span class="sc">$</span>parameters<span class="sc">$</span>mean[<span class="dv">1</span>],<span class="fu">sqrt</span>(res<span class="sc">$</span>parameters<span class="sc">$</span>variance<span class="sc">$</span>sigmasq[<span class="dv">1</span>])),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y2=</span>res<span class="sc">$</span>parameters<span class="sc">$</span>pro[<span class="dv">2</span>] <span class="sc">*</span> <span class="fu">dnorm</span>(aux,res<span class="sc">$</span>parameters<span class="sc">$</span>mean[<span class="dv">2</span>],<span class="fu">sqrt</span>(res<span class="sc">$</span>parameters<span class="sc">$</span>variance<span class="sc">$</span>sigmasq[<span class="dv">2</span>])),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y3=</span>res<span class="sc">$</span>parameters<span class="sc">$</span>pro[<span class="dv">3</span>] <span class="sc">*</span> <span class="fu">dnorm</span>(aux,res<span class="sc">$</span>parameters<span class="sc">$</span>mean[<span class="dv">3</span>],<span class="fu">sqrt</span>(res<span class="sc">$</span>parameters<span class="sc">$</span>variance<span class="sc">$</span>sigmasq[<span class="dv">3</span>])))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>MelEstim<span class="ot">&lt;-</span><span class="fu">data.frame</span>(MelEstim,<span class="at">Somme=</span><span class="fu">apply</span>(MelEstim[,<span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>],<span class="dv">1</span>,sum))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>gMelEst<span class="ot">&lt;-</span><span class="fu">ggplot</span>(X,<span class="fu">aes</span>(<span class="at">x=</span>X))<span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)),<span class="at">bins=</span><span class="dv">100</span>)<span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y1),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"red"</span>)<span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y2),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"green4"</span>)<span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y3),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"blue"</span>)<span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>Somme),<span class="at">data=</span>MelEstim,<span class="at">col=</span><span class="st">"yellow"</span>,<span class="at">linetype =</span> <span class="st">"dashed"</span>,<span class="at">linewidth=</span><span class="fl">1.5</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>gMelEst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Calculez les probabilités a posteriori d’appartenance des individus à chacune des trois classes et tracez-les graphiquement.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-10_61004d55a4d45a2ac1cd537cad2741a4">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dans p mettre le vecteur des proba a posteriori d'appartenance (t_{11},\ldots,t_{n1},t_{12},\ldots,t_{n3})</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>MelProba<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rep</span>(aux,<span class="dv">3</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">p=</span> <span class="fu">c</span>(..., ..., ..),    </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">class=</span><span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="at">each=</span><span class="fu">length</span>(aux))))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>gprobapost<span class="ot">&lt;-</span><span class="fu">ggplot</span>(MelProba,<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>p,<span class="at">col=</span>class))<span class="sc">+</span><span class="fu">geom_line</span>()</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>gprobapost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-11_4fec3585cd3a5c15843d601c0ebd40b7">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>MelProba<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">x=</span><span class="fu">rep</span>(aux,<span class="dv">3</span>),</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">p=</span><span class="fu">c</span>(MelEstim<span class="sc">$</span>y1 <span class="sc">/</span> MelEstim<span class="sc">$</span>Somme , </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                         MelEstim<span class="sc">$</span>y2 <span class="sc">/</span> MelEstim<span class="sc">$</span>Somme,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                         MelEstim<span class="sc">$</span>y3 <span class="sc">/</span> MelEstim<span class="sc">$</span>Somme),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">class=</span><span class="fu">as.factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="at">each=</span><span class="fu">length</span>(aux))))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>gprobapost<span class="ot">&lt;-</span><span class="fu">ggplot</span>(MelProba,<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>p,<span class="at">col=</span>class))<span class="sc">+</span><span class="fu">geom_line</span>()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>gprobapost</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Tracez les boxplots des probabilités d’appartenance maximales par classe. Vous pouvez vous aider de la fonction <code>apply()</code>.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-12_194fed31efe0a94ab4aa8a90f88aa2ed">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">lab=</span>...,<span class="at">probamax=</span>...)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>gprobamax<span class="ot">&lt;-</span><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>lab,<span class="at">y=</span>probamax))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(gvrai,gMelEst,gprobapost,gprobamax,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-13_94eb350df1669a2b984c6071522011d9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gprobamax<span class="ot">&lt;-</span><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">lab=</span><span class="fu">as.factor</span>(<span class="fu">apply</span>(res<span class="sc">$</span>z,<span class="dv">1</span>,which.max)),</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">probamax=</span><span class="fu">apply</span>(res<span class="sc">$</span>z,<span class="dv">1</span>,max)),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">aes</span>(<span class="at">x=</span>lab,<span class="at">y=</span>probamax))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(gvrai,gMelEst,gprobapost,gprobamax,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="application-sur-des-données-simulées-dans-mathbbr2" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="application-sur-des-données-simulées-dans-mathbbr2"><span class="header-section-number">1.2</span> Application sur des données simulées dans <span class="math inline">\(\mathbb{R}^2\)</span></h2>
+<p>On va ici utiliser les données simulées “ex4.1” disponibles dans la librairie <code>mclust</code>. Ces données sont simulées selon un mélange de densités gaussiennes, proposées dans Baudry et al (2010). L’objectif est d’étudier l’impact du choix des formes des mélanges considérées et de la différence d’objectif entre les critères BIC et ICL. On va au travers de ce jeu de données simulées simple appréhender la manipulation des fonctions pour le clustering par mélanges gaussiens avec R.</p>
+<p>On commence ici par charger les données :</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-15_33c8d5055e82b975a9105ae29dc45a55">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclust)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Baudry_etal_2010_JCGS_examples)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>Data<span class="ot">&lt;-</span>ex4<span class="fl">.1</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data,<span class="fu">aes</span>(<span class="at">x=</span>X1,<span class="at">y=</span>X2))<span class="sc">+</span><span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="mélanges-gaussiens-diagonaux" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="mélanges-gaussiens-diagonaux"><span class="header-section-number">1.2.1</span> Mélanges gaussiens diagonaux</h3>
+<p>Dans cette section, on va considérer une collection de modèles de mélanges gaussiens avec un nombre de composantes <span class="math inline">\(K\)</span> variant entre <span class="math inline">\(2\)</span> et <span class="math inline">\(10\)</span> et des matrices de variance-covariance diagonales.</p>
+<p><strong>Question :</strong> A l’aide de la fonction <code>Mclust()</code>, estimez les paramètres des mélanges gaussiens considérés. Vous pouvez consulter l’aide de la fonction <code>mclustModelNames()</code> pour le choix des formes des mélanges.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-16_641d12d33c07ea87879992ab73225c6f">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>resBICdiag<span class="ot">&lt;-</span><span class="fu">Mclust</span>(....)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-17_10f955f755693e9159c38b499e468bbe">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>resBICdiag<span class="ot">&lt;-</span><span class="fu">Mclust</span>(Data,<span class="at">G=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>,<span class="at">modelNames=</span><span class="fu">c</span>(<span class="st">"EII"</span>,<span class="st">"VII"</span>,<span class="st">"EEI"</span>,<span class="st">"VEI"</span>,<span class="st">"EVI"</span>,<span class="st">"VVI"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> A l’aide de la fonction <code>fviz_mclust_bic()</code>, visualisez le comportement du critère BIC sur la collection de modèles. Quel modèle est sélectionné ? Contrôlez à l’aide de <code>summary(resBICdiag)</code>.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-18_cd6d3b12e6b396f2db28cf8845a75e58">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mclust</span>(....,<span class="at">what=</span>....)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resBICdiag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-19_7f4ff63f17c41a4cbbd380650dd9b4be">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mclust</span>(resBICdiag,<span class="at">what=</span><span class="st">"BIC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resBICdiag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>---------------------------------------------------- 
+Gaussian finite mixture model fitted by EM algorithm 
+---------------------------------------------------- 
+
+Mclust EVI (diagonal, equal volume, varying shape) model with 10 components: 
+
+ log-likelihood   n df       BIC       ICL
+      -1993.944 600 40 -4243.764 -4470.305
+
+Clustering table:
+  1   2   3   4   5   6   7   8   9  10 
+ 48  70  82 145  16  53  74   8  72  32 </code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Tracez la classification obtenue sur le nuage de points (vous pouvez utiliser la fonction <code>fviz_cluster()</code>). Comment est obtenue cette classification à partir du mélange gaussien retenu ? Quels sont les effectifs par classe ? Contrôlez les probabilités a posterori d’appartenance.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-20_953e93375fb1ec042bf9c86a29dfe94a">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualisation du clustering</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_cluster</span>(...)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Effectifs par classe</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(....)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot des probabilités a posteriori maximales</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span>...,    <span class="at">proba=</span>...)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-21_892dfa1b104eb61e4fef4447b9507da3">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Effectifs par classe</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resBICdiag<span class="sc">$</span>classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  1   2   3   4   5   6   7   8   9  10 
+ 48  70  82 145  16  53  74   8  72  32 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Cl"</span>,resBICdiag<span class="sc">$</span>classification,<span class="at">sep=</span><span class="st">""</span>),    <span class="at">proba=</span><span class="fu">apply</span>(resBICdiag<span class="sc">$</span>z,<span class="dv">1</span>,max))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot des probabilités a posteriori maximales</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>h1<span class="ot">&lt;-</span><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Classification sur les points</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>h2<span class="ot">&lt;-</span><span class="fu">fviz_cluster</span>(resBICdiag,<span class="at">data=</span>Data,<span class="at">ellipse.type=</span><span class="st">"norm"</span>,<span class="at">geom=</span><span class="st">"point"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(h1,h2,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Question :</strong> Quel mélange gaussien est retenu avec le critère ICL ? Vous utiliserez la fonction <code>mclustICL()</code>. Etudiez la classification alors déduite.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-22_351343871000d596128046619a429aec">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>resICL<span class="ot">&lt;-</span><span class="fu">mclustICL</span>(...)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resICL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-23_39b618824955619e30a2b05ec20aabaf">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>resICL<span class="ot">&lt;-</span><span class="fu">mclustICL</span>(Data,<span class="at">G=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>,<span class="at">modelNames=</span><span class="fu">c</span>(<span class="st">"EII"</span>,<span class="st">"VII"</span>,<span class="st">"EEI"</span>,<span class="st">"VEI"</span>,<span class="st">"EVI"</span>,<span class="st">"VVI"</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resICL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best ICL values:
+             EVI,4       VVI,4      EEI,4
+ICL      -4407.029 -4422.87307 -4446.3616
+ICL diff     0.000   -15.84396   -39.3325</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-24_f3de1f83c8d4471c7664c4df8c228af4">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>modICL<span class="ot">&lt;-</span><span class="fu">Mclust</span>(Data,<span class="at">G=</span><span class="dv">4</span>,<span class="at">modelNames =</span> <span class="st">"EVI"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Cl"</span>,modICL<span class="sc">$</span>classification,<span class="at">sep=</span><span class="st">""</span>), <span class="at">proba=</span><span class="fu">apply</span>(modICL<span class="sc">$</span>z,<span class="dv">1</span>,max))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(modICL,<span class="at">what=</span><span class="st">"classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="toutes-les-formes-de-mélanges-gaussiens" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="toutes-les-formes-de-mélanges-gaussiens"><span class="header-section-number">1.2.2</span> Toutes les formes de mélanges gaussiens</h3>
+<p><strong>Question :</strong> Reprenez les questions de la section précédente en considérant ici toutes les formes de mélanges gaussiens. Commentez.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-25_590772ea453e5a380ee794f9ca213eff">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A COMPLETER</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Choix avec le critère BIC :</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-26_cea2df91cca69284c2354bb891dd4c32">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>resBICall<span class="ot">&lt;-</span><span class="fu">Mclust</span>(Data,<span class="at">G=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plot(resBICall)</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mclust</span>(resBICall,<span class="at">what=</span><span class="st">"BIC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resBICall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>---------------------------------------------------- 
+Gaussian finite mixture model fitted by EM algorithm 
+---------------------------------------------------- 
+
+Mclust EEV (ellipsoidal, equal volume and shape) model with 6 components: 
+
+ log-likelihood   n df       BIC       ICL
+      -1957.781 600 25 -4075.484 -4248.353
+
+Clustering table:
+  1   2   3   4   5   6 
+ 78 122 121 107 132  40 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Cl"</span>,resBICall<span class="sc">$</span>classification,<span class="at">sep=</span><span class="st">""</span>), <span class="at">proba=</span><span class="fu">apply</span>(resBICall<span class="sc">$</span>z,<span class="dv">1</span>,max))</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>h1<span class="ot">&lt;-</span><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>h2<span class="ot">&lt;-</span><span class="fu">fviz_cluster</span>(resBICall,<span class="at">data=</span>Data,<span class="at">ellipse.type=</span><span class="st">"norm"</span>,<span class="at">geom=</span><span class="st">"point"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(h1,h2,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-26-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Choix avec le critère ICL :</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-27_ab1160ecfdc8817d6191fc1d9feac09e">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>resICLall<span class="ot">&lt;-</span><span class="fu">mclustICL</span>(Data,<span class="at">G=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resICLall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best ICL values:
+             VVV,4       EVV,4       EEV,6
+ICL      -4230.492 -4240.60219 -4248.35295
+ICL diff     0.000   -10.10982   -17.86057</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>resICL<span class="ot">&lt;-</span><span class="fu">Mclust</span>(Data,<span class="at">G=</span><span class="dv">4</span>,<span class="at">modelNames =</span> <span class="st">"VVV"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Cl"</span>,resICL<span class="sc">$</span>classification,<span class="at">sep=</span><span class="st">""</span>), <span class="at">proba=</span><span class="fu">apply</span>(resICL<span class="sc">$</span>z,<span class="dv">1</span>,max))</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>h1<span class="ot">&lt;-</span><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>h2<span class="ot">&lt;-</span><span class="fu">fviz_cluster</span>(resICL,<span class="at">data=</span>Data,<span class="at">ellipse.type=</span><span class="st">"norm"</span>,<span class="at">geom=</span><span class="st">"point"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(h1,h2,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="etude-des-données-de-vins" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="etude-des-données-de-vins"><span class="header-section-number">1.3</span> Etude des données de vins</h2>
+<p>On reprend dans ce TP les données <code>wine</code> disponibles sur la page moodle du cours. On charge ici les données.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-28_4d94a33c0d055c0f37f7a74104d2067a">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>wine<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"wine.txt"</span>,<span class="at">header=</span>T)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>wine<span class="sc">$</span>Qualite <span class="ot">=</span> <span class="fu">as.factor</span>(wine<span class="sc">$</span>Qualite)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>wine<span class="sc">$</span>Type <span class="ot">=</span> <span class="fu">factor</span>(wine<span class="sc">$</span>Type, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"blanc"</span>, <span class="st">"rouge"</span>))</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>wineinit<span class="ot">&lt;-</span>wine</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)]<span class="ot">&lt;-</span><span class="fu">scale</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">center=</span>T,<span class="at">scale=</span>T)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(wine)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Qualite  Type      AcidVol    AcidCitr     SO2lbr      SO2tot     Densite
+1352  medium rouge  1.638714588 -1.92626362 -1.2083376 -1.15967786 -0.46497450
+5493  medium blanc -0.068544417 -1.35617574 -0.7004747 -0.85707581 -0.33499781
+5153  medium blanc -0.800226847 -0.59605856  0.5409681 -0.02047014  1.32391517
+5308  medium blanc -0.007570881  0.92417581  1.7824108  1.27893867  1.08790487
+3866  medium blanc  0.419243870  0.03737243 -0.5311870  0.99413674  0.03783006
+694   medium rouge  0.785085086  0.03737243 -0.4747578  0.19313131  1.27260858
+          Alcool
+1352  1.14546909
+5493 -1.12092616
+5153 -1.29526426
+5308 -1.29526426
+3866  0.09944051
+694  -0.94658806</code></pre>
+</div>
+</div>
+<p>On fait une ACP pour la visualisation des résultats dans la suite</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-29_297846e7a1fc0c8f226cd080883a51dc">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>resacp<span class="ot">&lt;-</span><span class="fu">PCA</span>(wine,<span class="at">quali.sup=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">scale.unit =</span> <span class="cn">TRUE</span>,<span class="at">graph=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Question :</strong> Déterminez une classification de ces données à l’aide d’un modèle de mélange. Comparez votre résultat avec les classifications obtenues dans les TP précédents (avec Kmeans, CAH).</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-30_dcb98bd7c7ec2f7a9530e41f73140189">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A FAIRE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Avec le critère BIC :</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-31_a434ee1922e8ef7980f901e6d14ac3f0">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>resBICall<span class="ot">&lt;-</span><span class="fu">Mclust</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">G=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mclust</span>(resBICall,<span class="at">what=</span><span class="st">"BIC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resBICall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>---------------------------------------------------- 
+Gaussian finite mixture model fitted by EM algorithm 
+---------------------------------------------------- 
+
+Mclust VVE (ellipsoidal, equal orientation) model with 9 components: 
+
+ log-likelihood   n  df       BIC       ICL
+      -3817.907 600 131 -8473.812 -8644.462
+
+Clustering table:
+  1   2   3   4   5   6   7   8   9 
+ 94  51  32 106  22 156  63  47  29 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>resBIC<span class="ot">&lt;-</span><span class="fu">Mclust</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">G=</span><span class="dv">9</span>,<span class="at">modelNames =</span> <span class="st">"VVE"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Cl"</span>,resBICall<span class="sc">$</span>classification,<span class="at">sep=</span><span class="st">""</span>), <span class="at">proba=</span><span class="fu">apply</span>(resBICall<span class="sc">$</span>z,<span class="dv">1</span>,max))</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>h1<span class="ot">&lt;-</span><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>h2<span class="ot">&lt;-</span><span class="fu">fviz_cluster</span>(resBICall,<span class="at">data=</span>Data,<span class="at">ellipse.type=</span><span class="st">"norm"</span>,<span class="at">geom=</span><span class="st">"point"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(h1,h2,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-31-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Avec le critère ICL :</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-32_a8e9c6e861532f876a2b6fc906bfc78d">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>resICLall<span class="ot">&lt;-</span><span class="fu">mclustICL</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">G=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(resICLall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Best ICL values:
+             EVV,3       VVE,9       EEV,3
+ICL      -8628.533 -8644.46196 -8648.00671
+ICL diff     0.000   -15.92897   -19.47373</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>resICL<span class="ot">&lt;-</span><span class="fu">Mclust</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">G=</span><span class="dv">3</span>,<span class="at">modelNames =</span> <span class="st">"EVV"</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>Aux<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Cl"</span>,resICL<span class="sc">$</span>classification,<span class="at">sep=</span><span class="st">""</span>), <span class="at">proba=</span><span class="fu">apply</span>(resICL<span class="sc">$</span>z,<span class="dv">1</span>,max))</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>h1<span class="ot">&lt;-</span><span class="fu">ggplot</span>(Aux,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>h2<span class="ot">&lt;-</span><span class="fu">fviz_cluster</span>(resICL,<span class="at">data=</span>Data,<span class="at">ellipse.type=</span><span class="st">"norm"</span>,<span class="at">geom=</span><span class="st">"point"</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">""</span>)<span class="sc">+</span><span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(h1,h2,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(wine[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)],<span class="at">Class=</span><span class="fu">as.factor</span>(resICL<span class="sc">$</span>classification))</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">melt</span>(df,<span class="at">id=</span><span class="st">"Class"</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>variable,<span class="at">y=</span>value))<span class="sc">+</span><span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill=</span>Class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-33_87fe15a9c8da7109a8d0c4c3e458568a">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># comparaison des deux classifications</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resICL<span class="sc">$</span>classification,resBIC<span class="sc">$</span>classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+      1   2   3   4   5   6   7   8   9
+  1  92   0   0  26   0   0   0   0  29
+  2   1  30  27  60   2  10   0   0   0
+  3   1  21   5  20  20 146  63  47   0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(resICL<span class="sc">$</span>classification,resBIC<span class="sc">$</span>classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2828314</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="classification-par-mélanges-pour-données-catégorielles" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Classification par mélanges pour données catégorielles</h1>
+<p>Dans cette partie, on souhaite obtenir une classification des animaux du jeu de données zoo à l’aide de modèles de mélanges. On reprend donc le jeu de données et on refait une analyse en composantes multiples pour la visualisation des résultats.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-34_0c299f7ff8de9ad63cabb9423adc3f92">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>zoo<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"zoo-dataTP.txt"</span>,<span class="at">header=</span>T,<span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(zoo))</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  zoo[,j]<span class="ot">&lt;-</span><span class="fu">as.factor</span>(zoo[,j])</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> hair   feathers eggs   milk   airbone aquatic predator toothed backbone
+ 0:58   0:81     0:42   0:60   0:77    0:65    0:45     0:40    0:18    
+ 1:43   1:20     1:59   1:41   1:24    1:36    1:56     1:61    1:83    
+                                                                        
+                                                                        
+                                                                        
+                                                                        
+ breathes venomous fins   legs   tail   domestic catsize
+ 0:21     0:93     0:84   0:23   0:26   0:88     0:57   
+ 1:80     1: 8     1:17   2:27   1:75   1:13     1:44   
+                          4:38                          
+                          5: 1                          
+                          6:10                          
+                          8: 2                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 101  16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>res.mca<span class="ot">&lt;-</span> <span class="fu">MCA</span>(zoo,<span class="at">ncp =</span> <span class="dv">5</span>, <span class="at">graph =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_ind</span>(res.mca,<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Pour la suite du TP, on pourra utiliser les fonctions auxiliaires suivantes. La fonction <code>barplotClus()</code> permet de tracer la répartition des modalités de variables qualitatives pour chaque classe d’un clustering donné.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-35_cb7c5c697752ce36053d0494ed14b015">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># J indice des variables</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Data = jeu de données</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co"># clust = clustering étudié</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="co"># output : liste des graphes par variable dans J donnant la répartition des modalités de J par classe de clust</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>barplotClus <span class="ot">&lt;-</span> <span class="cf">function</span>(clust, Data, J) {</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>    aux.long.p <span class="ot">&lt;-</span> <span class="fu">heatm</span>(clust, Data, J)<span class="sc">$</span>freq</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    p<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(J)) {</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>        p[[j]] <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aux.long.p[<span class="fu">which</span>(aux.long.p<span class="sc">$</span>variable <span class="sc">==</span> <span class="fu">colnames</span>(Data)[J[j]]), ],</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> clust, <span class="at">y =</span> perc, <span class="at">fill =</span> value)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>)<span class="sc">+</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">fill =</span> <span class="fu">colnames</span>(Data)[J[j]])</span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb62-17"><a href="#cb62-17" aria-hidden="true" tabindex="-1"></a>heatm <span class="ot">&lt;-</span> <span class="cf">function</span>(clust, Data, J) {</span>
+<span id="cb62-18"><a href="#cb62-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(dplyr)</span>
+<span id="cb62-19"><a href="#cb62-19" aria-hidden="true" tabindex="-1"></a>    Dataaux <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id.s =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Data)), Data)</span>
+<span id="cb62-20"><a href="#cb62-20" aria-hidden="true" tabindex="-1"></a>    aux <span class="ot">&lt;-</span> <span class="fu">cbind</span>(Dataaux, clust)</span>
+<span id="cb62-21"><a href="#cb62-21" aria-hidden="true" tabindex="-1"></a>    aux.long <span class="ot">&lt;-</span> <span class="fu">melt</span>(<span class="fu">data.frame</span>(<span class="fu">lapply</span>(aux, as.character)), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb62-22"><a href="#cb62-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">id =</span> <span class="fu">c</span>(<span class="st">"id.s"</span>, <span class="st">"clust"</span>), <span class="at">factorsAsStrings =</span> T)</span>
+<span id="cb62-23"><a href="#cb62-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Effectifs</span></span>
+<span id="cb62-24"><a href="#cb62-24" aria-hidden="true" tabindex="-1"></a>    aux.long.q <span class="ot">&lt;-</span> aux.long <span class="sc">%&gt;%</span></span>
+<span id="cb62-25"><a href="#cb62-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(clust, variable, value) <span class="sc">%&gt;%</span></span>
+<span id="cb62-26"><a href="#cb62-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">count =</span> <span class="fu">n_distinct</span>(id.s)) <span class="sc">%&gt;%</span></span>
+<span id="cb62-27"><a href="#cb62-27" aria-hidden="true" tabindex="-1"></a>        <span class="fu">distinct</span>(clust, variable, value, count)</span>
+<span id="cb62-28"><a href="#cb62-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avec fréquences</span></span>
+<span id="cb62-29"><a href="#cb62-29" aria-hidden="true" tabindex="-1"></a>    aux.long.p <span class="ot">&lt;-</span> aux.long.q <span class="sc">%&gt;%</span></span>
+<span id="cb62-30"><a href="#cb62-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(clust, variable) <span class="sc">%&gt;%</span></span>
+<span id="cb62-31"><a href="#cb62-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">perc =</span> count<span class="sc">/</span><span class="fu">sum</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb62-32"><a href="#cb62-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">arrange</span>(clust)</span>
+<span id="cb62-33"><a href="#cb62-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-34"><a href="#cb62-34" aria-hidden="true" tabindex="-1"></a>    Lev <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb62-35"><a href="#cb62-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(Data)) Lev <span class="ot">&lt;-</span> <span class="fu">c</span>(Lev, <span class="fu">levels</span>(Data[, j]))</span>
+<span id="cb62-36"><a href="#cb62-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-37"><a href="#cb62-37" aria-hidden="true" tabindex="-1"></a>    Jaux <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb62-38"><a href="#cb62-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(J)) {</span>
+<span id="cb62-39"><a href="#cb62-39" aria-hidden="true" tabindex="-1"></a>        Jaux <span class="ot">&lt;-</span> <span class="fu">c</span>(Jaux, <span class="fu">which</span>(aux.long.p<span class="sc">$</span>variable <span class="sc">==</span> <span class="fu">colnames</span>(Data)[J[j]]))</span>
+<span id="cb62-40"><a href="#cb62-40" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb62-41"><a href="#cb62-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-42"><a href="#cb62-42" aria-hidden="true" tabindex="-1"></a>    gaux <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(aux.long.p[Jaux, ], <span class="fu">aes</span>(<span class="at">x =</span> clust, <span class="at">y =</span> value)) <span class="sc">+</span> <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> perc)) <span class="sc">+</span></span>
+<span id="cb62-43"><a href="#cb62-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"white"</span>, <span class="at">mid =</span> <span class="st">"blue"</span>, <span class="at">high =</span> <span class="st">"red"</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span>
+<span id="cb62-44"><a href="#cb62-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-45"><a href="#cb62-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">gaux =</span> gaux, <span class="at">eff =</span> aux.long.q, <span class="at">freq =</span> aux.long.p))</span>
+<span id="cb62-46"><a href="#cb62-46" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nous allons utiliser une stratégie de classification via des modèles de mélange. Rappelons que l’on a pour données <span class="math inline">\(\mathbf{X}=(x_1,\ldots,x_n)\)</span> avec <span class="math inline">\(x_i\)</span> décrit par <span class="math inline">\(p\)</span> variables catégorielles, chacune avec <span class="math inline">\(m_j\)</span> modalités. Dans ce cas de variables qualitatives, on peut considérer des distributions multinomiales par variable et par composante. Pour écrire la distribution de mélange, on commence par transformer l’écriture des données de la façon suivante :</p>
+<p><span class="math display">\[x_i=(x_{i1},\ldots,x_{ip})\rightsquigarrow (x_i^{jh}; j=1,\ldots,p, h=1,\ldots,m_j)\]</span> avec <span class="math display">\[
+  x_i^{\,jh}=\left\{\begin{array}{l l}1 &amp; \textrm{ si } i \textrm{ prend la modalité } h  \textrm{ pour la variable }j\\
+                                      0 &amp; \textrm{ sinon.}\end{array}\right.
+\]</span> Les densités de mélange considérées sont de la forme <span class="math display">\[f(.|\theta_K)=\underset{k=1}{\stackrel{K}{\sum}}\pi_k f_k(x_i|\boldsymbol{\alpha}_k)\]</span> avec</p>
+<ul>
+<li><p><span class="math inline">\(f_k(x_i|\boldsymbol{\alpha}_k)=\underset{j=1}{\stackrel{p}{\prod}}\underset{h=1}{\stackrel{m_j}{\prod}}\left(\alpha_k^{\,jh}\right)^{x_i^{jh}}\)</span></p></li>
+<li><p><span class="math inline">\(\boldsymbol{\alpha}_k=(\alpha_k^{\,jh}; j=1,\ldots,p, h=1,\ldots,m_j)\)</span> avec <span class="math inline">\(\underset{h=1}{\stackrel{m_j}{\sum}}\alpha_k^{jh}=1\)</span></p></li>
+<li><p><span class="math inline">\(\theta_k=(\pi_1,\ldots,\pi_K,\boldsymbol{\alpha}_1,\ldots,\boldsymbol{\alpha}_K)\)</span></p></li>
+</ul>
+<p>Classiquement, on reparamétrise par</p>
+<ul>
+<li>Pour chaque classe <span class="math inline">\(k\)</span> et chaque variable <span class="math inline">\(j\)</span> <span class="math display">\[(\alpha_k^{\ j1},\ldots,\alpha_k^{\ jm_j}) \rightarrow (a_k^{\ j1},\ldots,a_k^{\ jm_j},\varepsilon_k^{\ j1},\ldots,\varepsilon_k^{\ jm_j})\]</span> avec <span class="math display">\[
+a_k^{\ jh}=\left\{\begin{array}{l l}1 &amp; \textrm{ si } h=\underset{h'=1,\ldots,m_j}{\mbox{argmax}}\ \alpha_k^{\ jh'}\\
+                                 0 &amp; \textrm{sinon}\end{array}\right.
+\]</span> (<span class="math inline">\(h\)</span>= modalité majoritaire pour variable <span class="math inline">\(j\)</span> dans classe <span class="math inline">\(k\)</span>) et</li>
+</ul>
+<p><span class="math display">\[
+\varepsilon_{k}^{\ jh}=\left\{\begin{array}{l l}1 - \alpha_k^{\ jh} &amp; \textrm{ si } a_k^{\ jh}=1\\
+                                   \alpha_k^{\ jh} &amp; \textrm{ si } a_k^{\ jh}=0\end{array}\right.
+\]</span></p>
+<p>Par exemple <span class="math inline">\((0.3,0.6,0.1) \rightsquigarrow (0,1,0,\ \ 0.3,0.4,0.1)\)</span></p>
+<p>La densité de mélange se réécrit alors <span class="math display">\[f(.|\theta_K)=\underset{k=1}{\stackrel{K}{\sum}}\pi_k \underset{j=1}{\stackrel{p}{\prod}}\underset{h=1}{\stackrel{m_j}{\prod}} \left[\left(1-\varepsilon_k^{\,jh}\right)^{a_k^{\ jh}} \left(\varepsilon_k^{\,jh}\right)^{1-a_k^{\ jh}}\right]^{x_i^{jh}}\]</span></p>
+<p>Selon les hypothèses faites sur les <span class="math inline">\(\varepsilon_{k}^{\ jh}\)</span> et sur les proportions du mélange, on a 10 formes possibles (dans le même esprit que les différentes formes des mélanges gaussiens, cf cours).</p>
+<p><strong>Question :</strong> A l’aide de la fonction <code>mixmodCluster</code> de la librairie <code>Rmixmod</code>, déterminez une classification des données par modèles de mélange. Vous étudierez en particulier les probabilités conditionnelles d’appartenance. Vous pouvez tester plusieurs formes de mélange.</p>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-36_a9ccb962a29672849b8fc9116a25ed5b">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmixmod)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>resmixmod<span class="ot">&lt;-</span><span class="fu">mixmodCluster</span>(</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> zoo, <span class="at">nbCluster =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>, </span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="fu">c</span>(<span class="st">"BIC"</span>, <span class="st">"ICL"</span>),</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">mixmodMultinomialModel</span>(<span class="st">"Binary_pk_Ekjh"</span>)</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des critères de sélection</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>K<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>BIC<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>ICL<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(resmixmod<span class="sc">@</span>results)){</span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>  K<span class="ot">&lt;-</span><span class="fu">c</span>(K,resmixmod<span class="sc">@</span>results[[k]]<span class="sc">@</span>nbCluster)</span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a>  BIC<span class="ot">&lt;-</span><span class="fu">c</span>(BIC,resmixmod<span class="sc">@</span>results[[k]]<span class="sc">@</span>criterionValue[<span class="dv">1</span>])</span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a>  ICL<span class="ot">&lt;-</span><span class="fu">c</span>(ICL,resmixmod<span class="sc">@</span>results[[k]]<span class="sc">@</span>criterionValue[<span class="dv">2</span>])</span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a><span class="do">## graphique à faire</span></span>
+<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Etude de la classification retenue</span></span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">proba=</span><span class="fu">apply</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>proba,<span class="dv">1</span>,max),<span class="at">label=</span><span class="fu">as.factor</span>(<span class="fu">apply</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>proba,<span class="dv">1</span>,which.max)))</span>
+<span id="cb63-25"><a href="#cb63-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span>
+<span id="cb63-26"><a href="#cb63-26" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition)</span>
+<span id="cb63-27"><a href="#cb63-27" aria-hidden="true" tabindex="-1"></a><span class="do">## A completer</span></span>
+<span id="cb63-28"><a href="#cb63-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-29"><a href="#cb63-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison avec les autres classifications</span></span>
+<span id="cb63-30"><a href="#cb63-30" aria-hidden="true" tabindex="-1"></a><span class="do">## A completer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-simple callout-note callout-titled" data-custom-style="correction" title="Correction">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Correction
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-37_fde61b9bc5e488122688e2b06f3e749a">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rmixmod)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>resmixmod<span class="ot">&lt;-</span><span class="fu">mixmodCluster</span>(</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> zoo, </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbCluster =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">20</span>, </span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">criterion =</span> <span class="fu">c</span>(<span class="st">"BIC"</span>, <span class="st">"ICL"</span>),</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">model =</span> <span class="fu">mixmodMultinomialModel</span>(<span class="st">"Binary_pk_Ekjh"</span>) <span class="co">#"Binary_pk_Ekjh")</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-38_cdda604a5ad5bc4788c7900c725d7fcc">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graphe des critères de sélection</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>K<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>BIC<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>ICL<span class="ot">&lt;-</span><span class="cn">NULL</span></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(resmixmod<span class="sc">@</span>results)){</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  K<span class="ot">&lt;-</span><span class="fu">c</span>(K,resmixmod<span class="sc">@</span>results[[k]]<span class="sc">@</span>nbCluster)</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  BIC<span class="ot">&lt;-</span><span class="fu">c</span>(BIC,resmixmod<span class="sc">@</span>results[[k]]<span class="sc">@</span>criterionValue[<span class="dv">1</span>])</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  ICL<span class="ot">&lt;-</span><span class="fu">c</span>(ICL,resmixmod<span class="sc">@</span>results[[k]]<span class="sc">@</span>criterionValue[<span class="dv">2</span>])</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>aux<span class="ot">&lt;-</span><span class="fu">sort.int</span>(K,<span class="at">index.return =</span> T)</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">K=</span>K[aux<span class="sc">$</span>ix],<span class="at">BIC=</span>BIC[aux<span class="sc">$</span>ix],<span class="at">ICL=</span>ICL[aux<span class="sc">$</span>ix])</span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">melt</span>(df,<span class="at">id=</span><span class="fu">c</span>(<span class="st">"K"</span>))</span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>K,<span class="at">y=</span>value,<span class="at">color=</span>variable))<span class="sc">+</span><span class="fu">geom_line</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-39_870acf3e895def413af2d30b9521ab15">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Etude de la classification retenue</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>df<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">proba=</span><span class="fu">apply</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>proba,<span class="dv">1</span>,max),<span class="at">label=</span><span class="fu">as.factor</span>(<span class="fu">apply</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>proba,<span class="dv">1</span>,which.max)))</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df,<span class="fu">aes</span>(<span class="at">x=</span>label,<span class="at">y=</span>proba))<span class="sc">+</span><span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+ 1  2  3  4 
+23 39 21 18 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>))</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">8</span>))</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">9</span><span class="sc">:</span><span class="dv">12</span>))</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>p<span class="ot">&lt;-</span><span class="fu">barplotClus</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,zoo,<span class="at">J=</span><span class="fu">c</span>(<span class="dv">13</span><span class="sc">:</span><span class="dv">16</span>))</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(<span class="at">grobs=</span>p,<span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_ind</span>(res.mca,<span class="at">habillage=</span><span class="fu">as.factor</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition),<span class="at">repel=</span>T)<span class="sc">+</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Mixture"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-6.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_mca_var</span>(<span class="fu">MCA</span>(<span class="fu">data.frame</span>(<span class="at">cl=</span><span class="fu">as.factor</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition),zoo),<span class="at">quali.sup=</span><span class="dv">1</span>,<span class="at">graph=</span>F),<span class="at">repel=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-39-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell" data-hash="TP4-MélangeGMM-Correction_cache/html/unnamed-chunk-40_36c76eeb64e137197fc9bb445dd1f1d7">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparaison avec Kmeans sur ACM</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>reskmeans<span class="ot">&lt;-</span><span class="fu">kmeans</span>(res.mca<span class="sc">$</span>ind<span class="sc">$</span>coord,<span class="dv">4</span>)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,reskmeans<span class="sc">$</span>cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   
+     1  2  3  4
+  1  1  0  2 20
+  2 38  0  0  1
+  3  1 20  0  0
+  4  0  0 18  0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustedRandIndex</span>(resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,reskmeans<span class="sc">$</span>cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8729107</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(circlize)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>clust1F<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">"ClKm-"</span>,reskmeans<span class="sc">$</span>cluster,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>clust2F<span class="ot">&lt;-</span><span class="fu">paste</span>(<span class="st">"ClMixture-"</span>,resmixmod<span class="sc">@</span>bestResult<span class="sc">@</span>partition,<span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>mycolor <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="dv">8</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="dv">1</span>, <span class="at">option =</span> <span class="st">"H"</span>)</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>mycolor <span class="ot">&lt;-</span> mycolor[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)]</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a><span class="fu">chordDiagram</span>(<span class="fu">table</span>(clust1F,clust2F),<span class="at">grid.col=</span>mycolor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="TP4-MélangeGMM-Correction_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
